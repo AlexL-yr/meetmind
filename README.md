@@ -1,61 +1,135 @@
-# New LangGraph Project
+# MeetMind 🧠
 
-[![CI](https://github.com/langchain-ai/new-langgraph-project/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/langchain-ai/new-langgraph-project/actions/workflows/unit-tests.yml)
-[![Integration Tests](https://github.com/langchain-ai/new-langgraph-project/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/langchain-ai/new-langgraph-project/actions/workflows/integration-tests.yml)
+An intelligent multi-agent system for meeting minutes generation and conversational AI, built with LangGraph and Google Gemini.
 
-This template demonstrates a simple application implemented using [LangGraph](https://github.com/langchain-ai/langgraph), designed for showing how to get started with [LangGraph Server](https://langchain-ai.github.io/langgraph/concepts/langgraph_server/#langgraph-server) and using [LangGraph Studio](https://langchain-ai.github.io/langgraph/concepts/langgraph_studio/), a visual debugging IDE.
+## Architecture
 
-<div align="center">
-  <img src="./static/studio_ui.png" alt="Graph view in LangGraph studio UI" width="75%" />
-</div>
-
-The core logic defined in `src/agent/graph.py`, showcases an single-step application that responds with a fixed string and the configuration provided.
-
-You can extend this graph to orchestrate more complex agentic workflows that can be visualized and debugged in LangGraph Studio.
-
-## Getting Started
-
-1. Install dependencies, along with the [LangGraph CLI](https://langchain-ai.github.io/langgraph/concepts/langgraph_cli/), which will be used to run the server.
-
-```bash
-cd path/to/your/app
-pip install -e . "langgraph-cli[inmem]"
+```
+User Input
+    ↓
+Router Agent (Intent Recognition)
+    ├── Chat Agent    → Conversational response with memory
+    └── Meeting Agent → Structured meeting minutes (MeetingSummary)
 ```
 
-2. (Optional) Customize the code and project as needed. Create a `.env` file if you need to use secrets.
+## Features
+
+- 🎯 **Automatic Intent Routing** — distinguishes between casual chat and meeting content
+- 📋 **Structured Meeting Minutes** — extracts title, attendees, decisions, action items
+- 🧠 **Conversation Memory** — retains context across turns with summary buffer
+- 🌐 **REST API** — FastAPI service with `/chat` endpoint
+- 🔄 **Session Management** — isolated memory per session
+
+## Quick Start
+
+### 1. Install dependencies
+
+```bash
+pip install -e .
+```
+
+### 2. Configure environment
 
 ```bash
 cp .env.example .env
+# Fill in your GOOGLE_API_KEY
 ```
 
-If you want to enable LangSmith tracing, add your LangSmith API key to the `.env` file.
+### 3. Run CLI
 
-```text
-# .env
-LANGSMITH_API_KEY=lsv2...
+```bash
+python run_agent.py
 ```
 
-3. Start the LangGraph Server.
+### 4. Run API Service
 
-```shell
-langgraph dev
+```bash
+python run_service.py
+# API docs: http://localhost:8000/docs
 ```
 
-For more information on getting started with LangGraph Server, [see here](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/).
+## API Usage
 
-## How to customize
+```bash
+# Chat
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello"}'
 
-1. **Define runtime context**: Modify the `Context` class in the `graph.py` file to expose the arguments you want to configure per assistant. For example, in a chatbot application you may want to define a dynamic system prompt or LLM to use. For more information on runtime context in LangGraph, [see here](https://langchain-ai.github.io/langgraph/agents/context/?h=context#static-runtime-context).
+# Meeting minutes
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Today we discussed the Q3 roadmap. Attendees: Alice, Bob. Decision: adopt JWT auth. Action: Bob to complete API by May 30."}'
+```
 
-2. **Extend the graph**: The core logic of the application is defined in [graph.py](./src/agent/graph.py). You can modify this file to add new nodes, edges, or change the flow of information.
+## API Response Example
 
-## Development
+```json
+{
+  "intent": "meeting",
+  "confidence": 0.98,
+  "response": "",
+  "meeting": {
+    "title": "Q3 Roadmap Review",
+    "date": "2026-05-24",
+    "attendees": ["Alice", "Bob"],
+    "summary": "Discussed Q3 roadmap and authentication implementation.",
+    "decisions": ["Adopt JWT authentication"],
+    "action_items": [
+      {
+        "action": "Complete backend API",
+        "owner": "Bob",
+        "deadline": "2026-05-30"
+      }
+    ],
+    "notes": ""
+  }
+}
+```
 
-While iterating on your graph in LangGraph Studio, you can edit past state and rerun your app from previous states to debug specific nodes. Local changes will be automatically applied via hot reload.
+## Project Structure
 
-Follow-up requests extend the same thread. You can create an entirely new thread, clearing previous history, using the `+` button in the top right.
+```
+my-agent/
+├── src/
+│   ├── agent/              # Router, Chat, Meeting agents + factory
+│   │   ├── router_agent.py
+│   │   ├── chat_agent.py
+│   │   ├── meeting_agent.py
+│   │   ├── factory.py
+│   │   └── prompts.py
+│   ├── core/               # LLM configuration
+│   │   └── llm.py
+│   ├── memory/             # Conversation memory manager
+│   │   └── manager.py
+│   ├── schema/             # Pydantic models
+│   │   ├── router.py       # RouterDecision
+│   │   └── meeting.py      # MeetingSummary
+│   └── session/            # Session management
+│       └── SessionManager.py
+├── tests/                  # Unit and integration tests
+├── run_agent.py            # CLI entry point
+├── run_service.py          # FastAPI service entry point
+├── .env.example
+└── pyproject.toml
+```
 
-For more advanced features and examples, refer to the [LangGraph documentation](https://langchain-ai.github.io/langgraph/). These resources can help you adapt this template for your specific use case and build more sophisticated conversational agents.
+## Tech Stack
 
-LangGraph Studio also integrates with [LangSmith](https://smith.langchain.com/) for more in-depth tracing and collaboration with teammates, allowing you to analyze and optimize your chatbot's performance.
+- [LangGraph](https://github.com/langchain-ai/langgraph) — agent orchestration
+- [LangChain](https://github.com/langchain-ai/langchain) — LLM framework
+- [Google Gemini](https://ai.google.dev/) — LLM backend
+- [FastAPI](https://fastapi.tiangolo.com/) — REST API
+- [Pydantic](https://docs.pydantic.dev/) — structured output schema
 
+## Environment Variables
+
+| Variable | Description | Required |
+|---|---|---|
+| `GOOGLE_API_KEY` | Google AI Studio API key | ✅ |
+| `MODEL_NAME` | Gemini model name (default: `gemini-3.1-flash-lite`) | ❌ |
+| `LLM_TEMPERATURE` | Model temperature (default: `0.7`) | ❌ |
+
+## License
+
+MIT
