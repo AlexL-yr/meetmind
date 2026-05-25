@@ -1,0 +1,26 @@
+{
+  "title": "API Design Session",
+  "date": "May 22, 2025",
+  "attendees": [
+    "James Cooper",
+    "Karen White"
+  ],
+  "summary": "James Cooper and Karen White held a structured discussion about whether to hire a dedicated DevOps engineer or upskill internally. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "James Cooper",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Karen White",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the hiring vs upskilling decision explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the hiring vs upskilling decision. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-005"
+}

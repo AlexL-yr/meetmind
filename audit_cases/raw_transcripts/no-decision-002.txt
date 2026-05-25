@@ -1,0 +1,12 @@
+Meeting: Sprint 15 Retrospective
+Date: February 12, 2025
+
+David Kim (CTO) opened the meeting and introduced the main agenda item: a discussion about whether to migrate the monolith to microservices.
+
+Emma Wilson (Design Lead) presented the case for one approach, noting the performance benefits and team familiarity. David Kim countered with concerns about cost, timeline, and migration risk.
+
+After 40 minutes of discussion, neither side was able to reach a consensus. David Kim summarised the situation: "We're not ready to decide today — let's revisit next sprint."
+
+Emma Wilson agreed, adding that they would gather more metrics over the next two weeks before reconvening. Both committed to preparing a written recommendation for the follow-up meeting.
+
+The meeting ended with no formal decision recorded on the monolith migration decision.

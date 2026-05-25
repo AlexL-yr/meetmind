@@ -1,0 +1,10 @@
+Meeting: Sprint 15 Retrospective
+Date: February 12, 2025
+
+David Kim (CTO) opened the meeting by reviewing the agenda. She highlighted the key deliverables for the coming sprint and noted that two items from last week remained unresolved.
+
+Emma Wilson (Design Lead) presented a status update on the current backlog. He flagged a dependency on an external API that was blocking progress on two user stories. He estimated the dependency would be resolved within three business days.
+
+David Kim and Emma Wilson agreed on next steps. David Kim would prepare a revised roadmap document capturing the updated scope, due by next Friday. Emma Wilson committed to providing a technical feasibility assessment by end of week.
+
+No other attendees were present. The meeting was adjourned at 3:10 PM.

@@ -1,0 +1,26 @@
+{
+  "title": "Customer Feedback Analysis",
+  "date": "April 17, 2025",
+  "attendees": [
+    "Henry Park",
+    "Irene Santos"
+  ],
+  "summary": "Henry Park and Irene Santos held a structured discussion about which cloud provider to use for the new region deployment. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "Henry Park",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Irene Santos",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the cloud provider selection explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the cloud provider selection. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-004"
+}

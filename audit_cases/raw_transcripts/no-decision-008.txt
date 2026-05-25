@@ -1,0 +1,12 @@
+Meeting: New Feature Kickoff
+Date: August 26, 2025
+
+Peter Chen (CEO) opened the meeting and introduced the main agenda item: a discussion about whether to open-source the internal tooling.
+
+Quinn Taylor (COO) presented the case for one approach, noting the performance benefits and team familiarity. Peter Chen countered with concerns about cost, timeline, and migration risk.
+
+After 40 minutes of discussion, neither side was able to reach a consensus. Peter Chen summarised the situation: "We tabled the discussion for the next planning session."
+
+Quinn Taylor agreed, adding that they would gather more metrics over the next two weeks before reconvening. Both committed to preparing a written recommendation for the follow-up meeting.
+
+The meeting ended with no formal decision recorded on the open-source decision.

@@ -1,0 +1,12 @@
+Meeting: Performance Review Prep
+Date: July 14, 2025
+
+Noah Davis (DevOps Engineer) opened by reviewing the timeline for the database migration project, which is critical for the upcoming platform upgrade.
+
+Olivia Johnson (Cloud Architect) confirmed the migration had been scoped and the initial estimate was by February 1st. This was recorded in the project plan at the start of the quarter.
+
+Later in the meeting, while discussing resource constraints, Noah Davis said: "Given the team's current capacity and the two vacancies we're trying to fill, I think realistically we're looking at before Easter for the full migration to be complete."
+
+Olivia Johnson acknowledged the revised estimate but expressed concern about downstream dependencies. No resolution was reached and the conflicting timelines were not reconciled before the meeting ended.
+
+The meeting closed without a confirmed deadline for the database migration.

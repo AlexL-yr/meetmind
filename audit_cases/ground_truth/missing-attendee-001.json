@@ -1,0 +1,28 @@
+{
+  "title": "Q2 Product Planning",
+  "date": "January 8, 2025",
+  "attendees": [
+    "Alice Chen",
+    "Bob Martinez"
+  ],
+  "summary": "Alice Chen and Bob Martinez reviewed the sprint backlog and an external API dependency. Next steps were agreed and ownership assigned to each attendee.",
+  "decisions": [
+    "Proceed with current sprint scope pending API resolution"
+  ],
+  "action_items": [
+    {
+      "action": "Prepare revised roadmap document",
+      "owner": "Alice Chen",
+      "deadline": "next Friday"
+    },
+    {
+      "action": "Provide technical feasibility assessment",
+      "owner": "Bob Martinez",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": null,
+  "defect_type": "MISSING_ATTENDEE",
+  "defect_description": "Only Alice Chen and Bob Martinez are mentioned. The AI should not hallucinate additional attendees.",
+  "transcript_id": "missing-attendee-001"
+}

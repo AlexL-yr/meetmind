@@ -10,7 +10,7 @@ PROVIDER_BASE_URLS ={
 }
 
 PROVIDER_DEFAULT_MODELS= {
-  "google": "gemini-3.1-flash-lite"
+  "google": "gemini-2.0-flash"
 }
 
 class Settings(BaseSettings):
@@ -22,11 +22,18 @@ class Settings(BaseSettings):
     extra="ignore"
   )
   llm_provider: LLMProvider = Field(default="google")
-  google_api_key: str = Field(default=None)
+  google_api_key: str = Field(default="")
 
   llm_model: str = Field(default="")
   llm_temperature: float = Field(default=0.7,ge=0.0,le=1.0)
 
+  # Claude / Anthropic
+  anthropic_api_key: str = Field(default="")
+  model_name_claude: str = Field(default="claude-sonnet-4-20250514")
+  model_name_gemini: str = Field(default="gemini-2.0-flash")
+
+  # ChromaDB
+  chroma_persist_dir: str = Field(default="./chroma_db")
 
   api_host: str = Field(default="0.0.0.0")
   api_port: int = Field(default=8000,ge=0,le=65535)
@@ -34,9 +41,7 @@ class Settings(BaseSettings):
   require_auth: bool = Field(default=False)
 
 def get_effective_llm_config(seetings: Settings, provider: Optional[str] = None) -> tuple[str,str,str]:
-  """
-  Return the effective LLM configuration for the given provider.
-  """
+  """Return the effective LLM configuration for the given provider."""
   provider = provider or seetings.llm_provider
   base_url = PROVIDER_BASE_URLS[provider]
   model = (seetings.llm_model or "").strip() or PROVIDER_DEFAULT_MODELS.get(provider, PROVIDER_DEFAULT_MODELS["google"])
@@ -48,7 +53,5 @@ def get_effective_llm_config(seetings: Settings, provider: Optional[str] = None)
 
 @lru_cache
 def get_settings() -> Settings:
-  """
-  Avoid reloading the settings every time
-  """
+  """Avoid reloading the settings every time."""
   return Settings()

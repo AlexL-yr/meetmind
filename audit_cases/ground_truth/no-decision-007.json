@@ -1,0 +1,26 @@
+{
+  "title": "Performance Review Prep",
+  "date": "July 14, 2025",
+  "attendees": [
+    "Noah Davis",
+    "Olivia Johnson"
+  ],
+  "summary": "Noah Davis and Olivia Johnson held a structured discussion about which ORM to adopt for the new data layer. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "Noah Davis",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Olivia Johnson",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the ORM selection explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the ORM selection. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-007"
+}

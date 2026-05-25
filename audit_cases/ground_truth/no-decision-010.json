@@ -1,0 +1,26 @@
+{
+  "title": "Team Hiring Discussion",
+  "date": "October 30, 2025",
+  "attendees": [
+    "Thomas Wilson",
+    "Uma Patel"
+  ],
+  "summary": "Thomas Wilson and Uma Patel held a structured discussion about whether to sunset the legacy v1 API. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "Thomas Wilson",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Uma Patel",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the v1 API deprecation decision explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the v1 API deprecation decision. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-010"
+}

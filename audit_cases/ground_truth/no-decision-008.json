@@ -1,0 +1,26 @@
+{
+  "title": "New Feature Kickoff",
+  "date": "August 26, 2025",
+  "attendees": [
+    "Peter Chen",
+    "Quinn Taylor"
+  ],
+  "summary": "Peter Chen and Quinn Taylor held a structured discussion about whether to open-source the internal tooling. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "Peter Chen",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Quinn Taylor",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the open-source decision explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the open-source decision. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-008"
+}

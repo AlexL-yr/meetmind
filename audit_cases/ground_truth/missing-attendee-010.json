@@ -1,0 +1,28 @@
+{
+  "title": "Team Hiring Discussion",
+  "date": "October 30, 2025",
+  "attendees": [
+    "Thomas Wilson",
+    "Uma Patel"
+  ],
+  "summary": "Thomas Wilson and Uma Patel reviewed the sprint backlog and an external API dependency. Next steps were agreed and ownership assigned to each attendee.",
+  "decisions": [
+    "Proceed with current sprint scope pending API resolution"
+  ],
+  "action_items": [
+    {
+      "action": "Prepare revised roadmap document",
+      "owner": "Thomas Wilson",
+      "deadline": "next Friday"
+    },
+    {
+      "action": "Provide technical feasibility assessment",
+      "owner": "Uma Patel",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": null,
+  "defect_type": "MISSING_ATTENDEE",
+  "defect_description": "Only Thomas Wilson and Uma Patel are mentioned. The AI should not hallucinate additional attendees.",
+  "transcript_id": "missing-attendee-010"
+}

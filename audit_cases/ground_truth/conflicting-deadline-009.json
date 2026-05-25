@@ -1,0 +1,15 @@
+{
+  "title": "Security Audit Review",
+  "date": "September 9, 2025",
+  "attendees": [
+    "Ryan Anderson",
+    "Sofia Martinez"
+  ],
+  "summary": "Ryan Anderson and Sofia Martinez discussed the database migration timeline. A deadline conflict was identified: the project was originally scoped for within 10 business days, but Ryan Anderson's revised estimate is by year-end. The conflict was not resolved.",
+  "decisions": [],
+  "action_items": [],
+  "notes": "CONFLICTING DEADLINES: Database migration deadline stated as 'within 10 business days' early in meeting, then revised to 'by year-end'. Conflict unresolved at end of meeting.",
+  "defect_type": "CONFLICTING_DEADLINE",
+  "defect_description": "The same database migration task has two conflicting deadlines: 'within 10 business days' and 'by year-end'. The AI should flag the conflict rather than arbitrarily picking one.",
+  "transcript_id": "conflicting-deadline-009"
+}

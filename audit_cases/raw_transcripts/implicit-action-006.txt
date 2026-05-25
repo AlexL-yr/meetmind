@@ -1,0 +1,12 @@
+Meeting: Budget Allocation Meeting
+Date: June 3, 2025
+
+Liam Brown (Data Scientist) opened the meeting by reviewing recent customer support tickets and usage analytics.
+
+Maria Garcia (ML Engineer) noted that three recurring complaints pointed to a friction point in the user journey. The team spent time reviewing the UX flow and discussing possible improvements.
+
+During the review, Liam Brown mentioned in passing: "It would be nice to have better test coverage on the payments module eventually." Neither Maria Garcia nor Liam Brown followed up to assign ownership, set a deadline, or add it to the sprint backlog.
+
+Maria Garcia raised a separate confirmed action item: she committed to drafting a summary of the customer complaints for the next product review by end of week.
+
+The meeting ended with one formal commitment recorded.

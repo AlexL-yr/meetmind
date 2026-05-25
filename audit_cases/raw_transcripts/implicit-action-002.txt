@@ -1,0 +1,12 @@
+Meeting: Sprint 15 Retrospective
+Date: February 12, 2025
+
+David Kim (CTO) opened the meeting by reviewing recent customer support tickets and usage analytics.
+
+Emma Wilson (Design Lead) noted that three recurring complaints pointed to a friction point in the user journey. The team spent time reviewing the UX flow and discussing possible improvements.
+
+During the review, David Kim mentioned in passing: "We should look into whether GraphQL would work better for our needs." Neither Emma Wilson nor David Kim followed up to assign ownership, set a deadline, or add it to the sprint backlog.
+
+Emma Wilson raised a separate confirmed action item: she committed to drafting a summary of the customer complaints for the next product review by end of week.
+
+The meeting ended with one formal commitment recorded.

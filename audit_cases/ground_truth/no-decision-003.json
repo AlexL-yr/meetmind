@@ -1,0 +1,26 @@
+{
+  "title": "Infrastructure Migration Review",
+  "date": "March 5, 2025",
+  "attendees": [
+    "Frank Thompson",
+    "Grace Liu"
+  ],
+  "summary": "Frank Thompson and Grace Liu held a structured discussion about whether to switch from REST to GraphQL for the public API. No decision was reached; the topic was explicitly deferred.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Gather supporting metrics and prepare written recommendation",
+      "owner": "Frank Thompson",
+      "deadline": "two weeks"
+    },
+    {
+      "action": "Prepare written recommendation for follow-up meeting",
+      "owner": "Grace Liu",
+      "deadline": "two weeks"
+    }
+  ],
+  "notes": "Decision on the API design decision explicitly deferred. Follow-up meeting to be scheduled.",
+  "defect_type": "NO_DECISION",
+  "defect_description": "The team explicitly deferred the API design decision. The AI should NOT record a decision on this topic.",
+  "transcript_id": "no-decision-003"
+}

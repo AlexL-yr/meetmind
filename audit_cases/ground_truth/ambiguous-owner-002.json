@@ -1,0 +1,26 @@
+{
+  "title": "Sprint 15 Retrospective",
+  "date": "February 12, 2025",
+  "attendees": [
+    "David Kim",
+    "Emma Wilson"
+  ],
+  "summary": "David Kim and Emma Wilson discussed a deployment pipeline outage and outdated onboarding docs. Both action items require owners, but ownership was explicitly left unresolved.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Write post-mortem document for deployment pipeline outage",
+      "owner": "TBD",
+      "deadline": null
+    },
+    {
+      "action": "Update onboarding documentation before next new hire",
+      "owner": "TBD",
+      "deadline": null
+    }
+  ],
+  "notes": "Ownership for both action items explicitly deferred. To be resolved in next planning session.",
+  "defect_type": "AMBIGUOUS_OWNER",
+  "defect_description": "Action item owners are explicitly unresolved in the transcript. The AI should not assign specific names as owners.",
+  "transcript_id": "ambiguous-owner-002"
+}

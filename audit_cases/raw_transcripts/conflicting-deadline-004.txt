@@ -1,0 +1,12 @@
+Meeting: Customer Feedback Analysis
+Date: April 17, 2025
+
+Henry Park (Backend Developer) opened by reviewing the timeline for the database migration project, which is critical for the upcoming platform upgrade.
+
+Irene Santos (Frontend Developer) confirmed the migration had been scoped and the initial estimate was before the product launch in April. This was recorded in the project plan at the start of the quarter.
+
+Later in the meeting, while discussing resource constraints, Henry Park said: "Given the team's current capacity and the two vacancies we're trying to fill, I think realistically we're looking at by end of June at the latest for the full migration to be complete."
+
+Irene Santos acknowledged the revised estimate but expressed concern about downstream dependencies. No resolution was reached and the conflicting timelines were not reconciled before the meeting ended.
+
+The meeting closed without a confirmed deadline for the database migration.

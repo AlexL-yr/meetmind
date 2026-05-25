@@ -1,0 +1,12 @@
+Meeting: Infrastructure Migration Review
+Date: March 5, 2025
+
+Frank Thompson (VP Sales) opened by reviewing the timeline for the database migration project, which is critical for the upcoming platform upgrade.
+
+Grace Liu (Marketing Director) confirmed the migration had been scoped and the initial estimate was next Friday. This was recorded in the project plan at the start of the quarter.
+
+Later in the meeting, while discussing resource constraints, Frank Thompson said: "Given the team's current capacity and the two vacancies we're trying to fill, I think realistically we're looking at end of the month for the full migration to be complete."
+
+Grace Liu acknowledged the revised estimate but expressed concern about downstream dependencies. No resolution was reached and the conflicting timelines were not reconciled before the meeting ended.
+
+The meeting closed without a confirmed deadline for the database migration.

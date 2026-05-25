@@ -1,0 +1,21 @@
+{
+  "title": "Performance Review Prep",
+  "date": "July 14, 2025",
+  "attendees": [
+    "Noah Davis",
+    "Olivia Johnson"
+  ],
+  "summary": "Noah Davis and Olivia Johnson reviewed customer support tickets and discussed UX friction points. One formal action item was assigned. An informal observation was noted but not committed.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Draft summary of customer complaints for product review",
+      "owner": "Olivia Johnson",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": "Informal observation by Noah Davis: \"Maybe we should think about consolidating our logging tools.\" This is a speculative tooling idea, no owner — not a formal action item.",
+  "defect_type": "IMPLICIT_ACTION",
+  "defect_description": "The statement 'Maybe we should think about consolidating our logging tools.…' is speculative tooling idea, no owner. The AI should NOT generate a formal action item from it.",
+  "transcript_id": "implicit-action-007"
+}

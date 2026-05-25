@@ -1,0 +1,28 @@
+{
+  "title": "Customer Feedback Analysis",
+  "date": "April 17, 2025",
+  "attendees": [
+    "Henry Park",
+    "Irene Santos"
+  ],
+  "summary": "Henry Park and Irene Santos reviewed the sprint backlog and an external API dependency. Next steps were agreed and ownership assigned to each attendee.",
+  "decisions": [
+    "Proceed with current sprint scope pending API resolution"
+  ],
+  "action_items": [
+    {
+      "action": "Prepare revised roadmap document",
+      "owner": "Henry Park",
+      "deadline": "next Friday"
+    },
+    {
+      "action": "Provide technical feasibility assessment",
+      "owner": "Irene Santos",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": null,
+  "defect_type": "MISSING_ATTENDEE",
+  "defect_description": "Only Henry Park and Irene Santos are mentioned. The AI should not hallucinate additional attendees.",
+  "transcript_id": "missing-attendee-004"
+}

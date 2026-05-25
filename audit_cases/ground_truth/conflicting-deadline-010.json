@@ -1,0 +1,15 @@
+{
+  "title": "Team Hiring Discussion",
+  "date": "October 30, 2025",
+  "attendees": [
+    "Thomas Wilson",
+    "Uma Patel"
+  ],
+  "summary": "Thomas Wilson and Uma Patel discussed the database migration timeline. A deadline conflict was identified: the project was originally scoped for before the code freeze, but Thomas Wilson's revised estimate is after the beta release. The conflict was not resolved.",
+  "decisions": [],
+  "action_items": [],
+  "notes": "CONFLICTING DEADLINES: Database migration deadline stated as 'before the code freeze' early in meeting, then revised to 'after the beta release'. Conflict unresolved at end of meeting.",
+  "defect_type": "CONFLICTING_DEADLINE",
+  "defect_description": "The same database migration task has two conflicting deadlines: 'before the code freeze' and 'after the beta release'. The AI should flag the conflict rather than arbitrarily picking one.",
+  "transcript_id": "conflicting-deadline-010"
+}

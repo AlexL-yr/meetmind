@@ -1,0 +1,21 @@
+{
+  "title": "Q2 Product Planning",
+  "date": "January 8, 2025",
+  "attendees": [
+    "Alice Chen",
+    "Bob Martinez"
+  ],
+  "summary": "Alice Chen and Bob Martinez reviewed customer support tickets and discussed UX friction points. One formal action item was assigned. An informal observation was noted but not committed.",
+  "decisions": [],
+  "action_items": [
+    {
+      "action": "Draft summary of customer complaints for product review",
+      "owner": "Bob Martinez",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": "Informal observation by Alice Chen: \"It would probably be helpful to add a tooltip to the export button.\" This is a vague UX suggestion with no assignment — not a formal action item.",
+  "defect_type": "IMPLICIT_ACTION",
+  "defect_description": "The statement 'It would probably be helpful to add a tooltip to the export …' is vague UX suggestion with no assignment. The AI should NOT generate a formal action item from it.",
+  "transcript_id": "implicit-action-001"
+}

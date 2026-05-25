@@ -1,0 +1,28 @@
+{
+  "title": "Performance Review Prep",
+  "date": "July 14, 2025",
+  "attendees": [
+    "Noah Davis",
+    "Olivia Johnson"
+  ],
+  "summary": "Noah Davis and Olivia Johnson reviewed the sprint backlog and an external API dependency. Next steps were agreed and ownership assigned to each attendee.",
+  "decisions": [
+    "Proceed with current sprint scope pending API resolution"
+  ],
+  "action_items": [
+    {
+      "action": "Prepare revised roadmap document",
+      "owner": "Noah Davis",
+      "deadline": "next Friday"
+    },
+    {
+      "action": "Provide technical feasibility assessment",
+      "owner": "Olivia Johnson",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": null,
+  "defect_type": "MISSING_ATTENDEE",
+  "defect_description": "Only Noah Davis and Olivia Johnson are mentioned. The AI should not hallucinate additional attendees.",
+  "transcript_id": "missing-attendee-007"
+}

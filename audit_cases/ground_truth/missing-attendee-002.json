@@ -1,0 +1,28 @@
+{
+  "title": "Sprint 15 Retrospective",
+  "date": "February 12, 2025",
+  "attendees": [
+    "David Kim",
+    "Emma Wilson"
+  ],
+  "summary": "David Kim and Emma Wilson reviewed the sprint backlog and an external API dependency. Next steps were agreed and ownership assigned to each attendee.",
+  "decisions": [
+    "Proceed with current sprint scope pending API resolution"
+  ],
+  "action_items": [
+    {
+      "action": "Prepare revised roadmap document",
+      "owner": "David Kim",
+      "deadline": "next Friday"
+    },
+    {
+      "action": "Provide technical feasibility assessment",
+      "owner": "Emma Wilson",
+      "deadline": "end of week"
+    }
+  ],
+  "notes": null,
+  "defect_type": "MISSING_ATTENDEE",
+  "defect_description": "Only David Kim and Emma Wilson are mentioned. The AI should not hallucinate additional attendees.",
+  "transcript_id": "missing-attendee-002"
+}

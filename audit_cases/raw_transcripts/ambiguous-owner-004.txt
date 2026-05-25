@@ -1,0 +1,12 @@
+Meeting: Customer Feedback Analysis
+Date: April 17, 2025
+
+Henry Park (Backend Developer) opened the meeting by presenting three agenda items requiring follow-up action from the previous sprint.
+
+Irene Santos (Frontend Developer) raised a concern about the deployment pipeline, which caused a 90-minute service disruption. Both agreed a post-mortem document was necessary before the next release.
+
+When asked who would own the post-mortem, Henry Park said: "Anyone available should pick this up."
+
+Irene Santos also noted the team's onboarding documentation was out of date. They agreed it needed updating before the next new hire starts, but again the discussion of ownership was explicitly tabled: "We'll figure out who does it — we're already over capacity this sprint."
+
+The meeting concluded with no owners formally assigned to either task.
