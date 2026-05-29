@@ -50,7 +50,11 @@ class JudgeAgent:
         ]
 
         response = self._llm.invoke(messages)
-        raw_text: str = response.content if hasattr(response, "content") else str(response)
+        content = response.content if hasattr(response, "content") else response
+        raw_text: str = content if isinstance(content, str) else (
+            "\n".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
+            if isinstance(content, list) else str(content)
+        )
 
         candidate_flags = self._parse_flags(raw_text)
         return {
@@ -76,7 +80,11 @@ class JudgeAgent:
             HumanMessage(content=user_content),
         ]
         response = await self._llm.ainvoke(messages)
-        raw_text: str = response.content if hasattr(response, "content") else str(response)
+        content = response.content if hasattr(response, "content") else response
+        raw_text: str = content if isinstance(content, str) else (
+            "\n".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
+            if isinstance(content, list) else str(content)
+        )
         candidate_flags = self._parse_flags(raw_text)
         return {
             "candidate_flags": candidate_flags,

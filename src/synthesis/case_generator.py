@@ -468,7 +468,7 @@ class CaseGenerator:
             ids.append(transcript_id)
         return ids
 
-    def generate_all(self, count_per_type: int = 10) -> dict[str, list[str]]:
+    def generate_all(self, count_per_type: int = 2) -> dict[str, list[str]]:
         """Generate cases for all 5 defect types. Returns {defect_type: [ids]}."""
         result: dict[str, list[str]] = {}
         for defect_type in _GENERATORS:

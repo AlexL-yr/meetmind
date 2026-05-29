@@ -6,6 +6,7 @@ from mcp.server.fastmcp import FastMCP
 from .tools.compare_outputs import compare_outputs as _compare_outputs
 from .tools.get_audit_summary import get_audit_summary as _get_audit_summary
 from .tools.get_ground_truth import get_ground_truth as _get_ground_truth
+from .tools.search_ground_truth import search_ground_truth as _search_ground_truth
 from .tools.write_audit_log import write_audit_log as _write_audit_log
 
 mcp = FastMCP("meetingtruth-audit")
@@ -50,6 +51,21 @@ def compare_outputs(ground_truth: dict, ai_output: dict) -> str:
         JSON string with discrepancies list and counts by category.
     """
     result = _compare_outputs(ground_truth, ai_output)
+    return json.dumps(result, ensure_ascii=False)
+
+
+@mcp.tool()
+def search_ground_truth(query: str, n_results: int = 3) -> str:
+    """Find the most semantically similar ground-truth cases for a free-text query.
+
+    Args:
+        query: Transcript excerpt or keyword description to search for.
+        n_results: Number of results to return (default 3).
+
+    Returns:
+        JSON string with list of similar ground-truth dicts ordered by cosine similarity.
+    """
+    result = _search_ground_truth(query, n_results=n_results)
     return json.dumps(result, ensure_ascii=False)
 
 

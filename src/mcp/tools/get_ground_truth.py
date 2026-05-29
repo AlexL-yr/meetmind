@@ -1,4 +1,8 @@
-"""Retrieve the correct expected output for a transcript from the ground-truth store."""
+"""Retrieve the correct expected output for a transcript by exact ID.
+
+Direct file lookup — fast and lock-free. For semantic similarity search,
+use the search_ground_truth tool which queries the ChromaDB vector store.
+"""
 import json
 from pathlib import Path
 

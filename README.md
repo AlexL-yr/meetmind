@@ -1,164 +1,149 @@
 # MeetingTruth
 
-AI ethics audit system for meeting summarization. Built on top of MeetMind's multi-agent foundation.
-
-**MeetMind** (original): routes user input to a chat agent or a Gemini-powered meeting summarizer.  
-**MeetingTruth** (new): audits that Gemini meeting agent for hallucinations using Claude as the top-level orchestrator and ChromaDB + sentence-transformers as the ground-truth RAG layer.
+AI ethics audit system for meeting summarization. A local LLM (LLaMA 3.1-8B) simulates a commercial meeting summarization product; Gemini acts as an independent auditor via the Model Context Protocol (MCP).
 
 ---
 
 ## Architecture
 
-### Original MeetMind pipeline (unchanged)
-
 ```
-User Input
-    ↓
-Router Agent (Intent Recognition — Gemini)
-    ├── Chat Agent    → Conversational response with memory
-    └── Meeting Agent → Structured MeetingSummary (Gemini)
-```
+Transcript (with injected defect)
+        │
+        ▼
+MeetingAgent — LLaMA 3.1-8B via Ollama      ← surrogate commercial system
+        │  MeetingSummary (JSON)
+        ▼
+AuditAgent — Gemini flash-lite               ← independent auditor
+        │
+        │  MCP tool calls (stdio transport)
+        ├─► get_ground_truth(id)    → file lookup
+        ├─► compare_outputs(gt, ai) → field-by-field diff
+        └─► write_audit_log(result) → AuditResult → JSONL
 
-### MeetingTruth audit layer (new)
-
-```
-Transcript (defective input)
-    ↓
-Audit Agent (Claude — top-level orchestrator)
-    ├── MCP tool: get_ground_truth   → ChromaDB RAG retrieval
-    ├── Meeting Agent (Gemini)       → AI output under audit
-    ├── MCP tool: compare_outputs    → field-by-field diff
-    ├── Claude classifies each flag  → HallucinationType + severity + ethical_risk
-    └── MCP tool: write_audit_log    → AuditResult → JSONL + CSV
-
-Judge Agent (Gemini — secondary validation, advisory only)
-    └── Secondary hallucination flags → "CANDIDATE FLAGS — FOR HUMAN REVIEW"
+RAG (ChromaDB + all-MiniLM-L6-v2)
+        └─► search_ground_truth(query) → cross-case semantic retrieval
 ```
 
-### Component responsibilities
+### Component roles
 
 | Component | Model | Role |
 |---|---|---|
-| `AuditAgent` | Claude (`claude-sonnet-4-20250514`) | Top-level orchestrator, hallucination classifier |
-| `MeetingAgent` | Gemini (`gemini-2.0-flash`) | Subject under audit — do not modify its prompts |
-| `JudgeAgent` | Gemini (`gemini-2.0-flash`) | Secondary validation pass (advisory) |
-| ChromaDB + `all-MiniLM-L6-v2` | local / free | Ground-truth RAG (no API key) |
-| MCP server | — | Exposes audit tools for Claude Desktop / MCP clients |
+| `MeetingAgent` | LLaMA 3.1-8B (Ollama, local) | Subject under audit — simulates commercial meeting AI |
+| `AuditAgent` | Gemini flash-lite | Independent auditor, calls MCP tools |
+| `JudgeAgent` | Gemini flash-lite | Secondary validation pass (advisory only) |
+| MCP server | — | Exposes audit tools via stdio transport |
+| ChromaDB + `all-MiniLM-L6-v2` | local | Ground-truth RAG, cross-case similarity search |
 
 ---
 
-## Hallucination Types
+## Hallucination Taxonomy
+
+Five domain-specific types designed for meeting summarization:
 
 | Type | Description |
 |---|---|
-| `FABRICATION` | AI invented something not present in the transcript |
+| `FABRICATION` | AI invented content not present in the transcript |
 | `OMISSION` | AI missed something clearly stated |
 | `MISATTRIBUTION` | AI assigned an action/decision to the wrong person |
 | `FALSE_DECISION` | AI marked a deferred discussion as decided |
-| `INFERRED_TASK` | AI created a formal action item from a vague statement |
+| `INFERRED_TASK` | AI formalised a vague statement into an action item |
 
 ---
 
 ## Quick Start
 
-### 1. Install dependencies
+### Prerequisites
+
+- Python 3.13+
+- [Ollama](https://ollama.ai) running locally with `llama3.1:8b` pulled
+- Google AI Studio API key (free tier, 500 RPD)
+
+```bash
+ollama pull llama3.1:8b
+```
+
+### Install
 
 ```bash
 pip install -e .
 ```
 
-### 2. Configure environment
+### Configure
 
 ```bash
 cp .env.example .env
-# Fill in ANTHROPIC_API_KEY and GOOGLE_API_KEY
+# Set GOOGLE_API_KEY in .env
 ```
 
-### 3. Generate the 50 synthetic test cases
+### Run
 
 ```bash
+# 1. Generate 10 synthetic test cases (2 per defect type)
 python run_audit.py --generate
-```
 
-### 4. (Optional) Index ground truth into ChromaDB
-
-```bash
+# 2. Index ground truth into ChromaDB (RAG)
 python run_audit.py --index
-```
 
-### 5. Run the audit
-
-```bash
-# Audit all 50 cases
+# 3. Run all audits
 python run_audit.py --cases all
 
-# Audit a specific defect type
+# 4. RAG cross-case analysis
+python run_audit.py --analyze
+
+# 5. Generate visualizations (5 figures, 300 dpi)
+python visualize_audit.py
+
+# Run a specific defect type
 python run_audit.py --cases missing_attendee
+python run_audit.py --cases conflicting_deadline,no_decision
 
-# Audit multiple defect types
-python run_audit.py --cases missing_attendee,no_decision
-
-# Print the aggregated summary table
+# Print aggregated summary
 python run_audit.py --report
 ```
 
-### 6. Run original MeetMind CLI / API (unchanged)
-
-```bash
-python run_agent.py       # interactive CLI
-python run_service.py     # FastAPI on :8000
-```
-
 ---
 
-## Audit Output
+## Output Files
 
-### `audit_cases/results/audit_log.jsonl`
-One JSON object per audited case. Contains full `AuditResult` with all
-`HallucinationFlag` details, scores, and risk classification.
-
-### `audit_cases/results/audit_results.csv`
-
-| Column | Description |
+| Path | Description |
 |---|---|
-| `transcript_id` | e.g. `missing-attendee-003` |
-| `defect_type` | one of the 5 defect types |
-| `hallucination_score` | 0.0 – 1.0 |
-| `misattribution_count` | count of MISATTRIBUTION flags |
-| `missing_items_count` | count of OMISSION flags |
-| `fabrication_count` | count of FABRICATION flags |
-| `overall_risk` | `high` / `medium` / `low` |
+| `audit_cases/results/audit_log.jsonl` | Full `AuditResult` per case (append-only) |
+| `audit_cases/results/audit_results.csv` | Summary table from last run |
+| `audit_cases/results/ai_outputs/` | Raw LLaMA outputs (pre-audit) |
+| `audit_cases/results/rag_analysis.json` | Cross-case RAG similarity data |
+| `audit_cases/results/figures/` | fig1–fig5 (300 dpi PNG) |
 
 ---
 
-## MCP Server (Claude Desktop integration)
+## MCP Tools
 
-The MCP server exposes all four audit tools as standard MCP tools:
+The MCP server exposes four tools callable via any MCP client:
 
 ```bash
 python -m src.mcp.server
 ```
 
-Tools available:
-- `get_ground_truth(transcript_id)` — retrieve expected output from RAG
-- `compare_outputs(ground_truth, ai_output)` — field-by-field diff
-- `write_audit_log(audit_result)` — persist result to JSONL
-- `get_audit_summary()` — aggregate statistics across all audits
+| Tool | Description |
+|---|---|
+| `get_ground_truth(transcript_id)` | Exact lookup from ground-truth store |
+| `compare_outputs(ground_truth, ai_output)` | Field-by-field structural diff |
+| `write_audit_log(audit_result)` | Persist AuditResult to JSONL |
+| `get_audit_summary()` | Aggregate stats across all audits |
+| `search_ground_truth(query, n_results)` | Semantic similarity search via ChromaDB |
 
 ---
 
-## Test Cases (50 total)
+## Test Cases
 
-The case generator creates 10 transcripts for each of the 5 defect types.
-Each case includes a raw `.txt` transcript and a `.json` ground truth.
+10 synthetic cases (2 per defect type), each with a raw `.txt` transcript and a `.json` ground truth:
 
-| Defect Type | Description |
+| Defect Type | What is injected |
 |---|---|
-| `MISSING_ATTENDEE` | Transcript only mentions 2 people; AI may hallucinate a 3rd |
-| `AMBIGUOUS_OWNER` | Owner explicitly unresolved ("someone will handle it") |
-| `CONFLICTING_DEADLINE` | Same task mentioned with two different deadlines |
-| `NO_DECISION` | Team explicitly defers; AI may mark as decided |
-| `IMPLICIT_ACTION` | Vague statement ("we should look into…"); AI may formalise it |
+| `missing_attendee` | Only 2 attendees mentioned; AI may hallucinate a third |
+| `ambiguous_owner` | Ownership explicitly unresolved in transcript |
+| `conflicting_deadline` | Same task mentioned with two different deadlines |
+| `no_decision` | Team explicitly defers; AI may mark as decided |
+| `implicit_action` | Vague statement ("we should look into…"); AI may formalise |
 
 ---
 
@@ -168,44 +153,33 @@ Each case includes a raw `.txt` transcript and a `.json` ground truth.
 meetingtruth/
 ├── src/
 │   ├── agent/
-│   │   ├── router_agent.py         # Intent routing (Gemini)
-│   │   ├── chat_agent.py           # Conversational agent with memory
-│   │   ├── meeting_agent.py        # Meeting summarizer (Gemini) — audit subject
-│   │   ├── audit_agent.py          # Claude-powered audit orchestrator
-│   │   ├── judge_agent.py          # Gemini secondary validation pass
-│   │   ├── factory.py              # Agent factory helpers
+│   │   ├── meeting_agent.py        # LLaMA surrogate (subject under audit)
+│   │   ├── audit_agent.py          # Gemini auditor, MCP tool-use loop
+│   │   ├── judge_agent.py          # Secondary validation (advisory)
 │   │   └── prompts.py              # All system prompts
-│   ├── rag/
-│   │   ├── indexer.py              # ChromaDB indexer (sentence-transformers)
-│   │   └── retriever.py            # Semantic retrieval
 │   ├── mcp/
-│   │   ├── server.py               # FastMCP server
-│   │   └── tools/
-│   │       ├── get_ground_truth.py
-│   │       ├── write_audit_log.py
-│   │       ├── compare_outputs.py
-│   │       └── get_audit_summary.py
+│   │   ├── server.py               # FastMCP server (stdio transport)
+│   │   └── tools/                  # get_ground_truth, compare_outputs,
+│   │                               #   write_audit_log, get_audit_summary,
+│   │                               #   search_ground_truth
+│   ├── rag/
+│   │   ├── indexer.py              # ChromaDB indexer
+│   │   ├── retriever.py            # Exact + semantic retrieval
+│   │   └── singleton.py            # Shared retriever instance
 │   ├── synthesis/
-│   │   └── case_generator.py       # 50 synthetic test transcripts
+│   │   └── case_generator.py       # Synthetic transcript generator
 │   ├── core/
-│   │   ├── config.py               # Settings (Claude + Gemini + Chroma)
-│   │   └── llm.py                  # get_claude_client(), get_llm()
-│   ├── memory/
-│   │   └── manager.py              # Conversation memory
-│   ├── schema/
-│   │   ├── meeting.py              # MeetingSummary
-│   │   ├── router.py               # RouterDecision
-│   │   └── audit.py                # AuditResult, HallucinationFlag
-│   └── session/
-│       └── SessionManager.py
+│   │   ├── config.py               # Settings
+│   │   └── llm.py                  # get_llm(), get_ollama_llm()
+│   └── schema/
+│       ├── meeting.py              # MeetingSummary
+│       └── audit.py                # AuditResult, HallucinationFlag
 ├── audit_cases/
-│   ├── raw_transcripts/            # 50 × .txt  (generated)
-│   ├── ground_truth/               # 50 × .json (generated)
-│   └── results/                    # audit_log.jsonl + audit_results.csv
-├── run_agent.py                    # Original MeetMind CLI
-├── run_service.py                  # Original FastAPI service
-├── run_audit.py                    # Batch audit runner
-├── .env.example
+│   ├── raw_transcripts/            # 10 × .txt
+│   ├── ground_truth/               # 10 × .json
+│   └── results/                    # outputs (gitignored)
+├── run_audit.py                    # Batch runner + analysis
+├── visualize_audit.py              # 5 seaborn figures
 └── pyproject.toml
 ```
 
@@ -215,24 +189,23 @@ meetingtruth/
 
 | Variable | Description | Required |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Anthropic API key (Claude) | ✅ for auditing |
-| `GOOGLE_API_KEY` | Google AI Studio (Gemini, free tier) | ✅ |
-| `MODEL_NAME_CLAUDE` | Claude model (default: `claude-sonnet-4-20250514`) | ❌ |
-| `MODEL_NAME_GEMINI` | Gemini model (default: `gemini-2.0-flash`) | ❌ |
-| `LLM_TEMPERATURE` | Shared temperature (default: `0.7`) | ❌ |
-| `CHROMA_PERSIST_DIR` | ChromaDB storage path (default: `./chroma_db`) | ❌ |
+| `GOOGLE_API_KEY` | Google AI Studio key (Gemini auditor) | ✅ |
+| `OLLAMA_BASE_URL` | Ollama server URL (default: `http://localhost:11434`) | ❌ |
+| `OLLAMA_MODEL` | Local model name (default: `llama3.1:8b`) | ❌ |
+| `MODEL_NAME_GEMINI` | Gemini model (default: `gemini-3.1-flash-lite`) | ❌ |
+| `CHROMA_PERSIST_DIR` | ChromaDB path (default: `./chroma_db`) | ❌ |
 
 ---
 
 ## Tech Stack
 
-- [Anthropic SDK](https://github.com/anthropics/anthropic-sdk-python) — Claude API (audit orchestration)
-- [LangChain + Google Gemini](https://github.com/langchain-ai/langchain-google) — meeting agent
-- [ChromaDB](https://www.trychroma.com/) — local vector store (no API key)
+- [LangChain + Google Gemini](https://github.com/langchain-ai/langchain-google) — audit LLM
+- [LangChain Ollama](https://github.com/langchain-ai/langchain-ollama) — local meeting agent
+- [langchain-mcp-adapters](https://github.com/langchain-ai/langchain-mcp-adapters) — MCP client for Gemini
+- [MCP / FastMCP](https://modelcontextprotocol.io/) — audit tool server
+- [ChromaDB](https://www.trychroma.com/) — local vector store
 - [sentence-transformers](https://www.sbert.net/) — local embeddings (`all-MiniLM-L6-v2`)
-- [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) — audit tool server
-- [FastAPI](https://fastapi.tiangolo.com/) — REST API
-- [LangGraph](https://github.com/langchain-ai/langgraph) — chat agent ReAct loop
+- [seaborn / matplotlib](https://seaborn.pydata.org/) — academic visualizations
 
 ## License
 

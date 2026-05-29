@@ -3,7 +3,7 @@ from typing import Optional,Literal
 from pydantic import Field
 from pydantic_settings import BaseSettings,SettingsConfigDict
 
-LLMProvider = Literal["google"]
+LLMProvider = Literal["google", "ollama"]
 
 PROVIDER_BASE_URLS ={
   "google": "https://generativelanguage.googleapis.com/v1beta"
@@ -31,6 +31,10 @@ class Settings(BaseSettings):
   anthropic_api_key: str = Field(default="")
   model_name_claude: str = Field(default="claude-sonnet-4-20250514")
   model_name_gemini: str = Field(default="gemini-2.0-flash")
+
+  # Ollama (local LLM — meeting agent subject under audit)
+  ollama_base_url: str = Field(default="http://localhost:11434")
+  ollama_model: str = Field(default="llama3.1:8b")
 
   # ChromaDB
   chroma_persist_dir: str = Field(default="./chroma_db")

@@ -161,3 +161,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .langgraph_api/
+
+# MeetingTruth generated outputs
+chroma_db/
+audit_cases/results/audit_log.jsonl
+audit_cases/results/audit_results.csv
+audit_cases/results/rag_analysis.json
+audit_cases/results/ai_outputs/
+audit_cases/results/figures/
+
+# keep the results folder itself
+!audit_cases/results/.gitkeep

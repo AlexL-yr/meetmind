@@ -5,7 +5,7 @@ Usage:
     python run_audit.py --cases missing_attendee
     python run_audit.py --cases ambiguous_owner,no_decision
     python run_audit.py --report
-    python run_audit.py --generate          # re-generate all 50 test cases
+    python run_audit.py --generate          # re-generate all 10 test cases
     python run_audit.py --index             # (re-)index ground truth into ChromaDB
 """
 from __future__ import annotations
@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import csv
 import sys
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -68,6 +69,93 @@ def _write_csv(rows: list[dict]) -> None:
     print(f"\nResults written to {CSV_PATH}")
 
 
+def _run_rag_analysis() -> None:
+    """Post-audit RAG cross-case analysis.
+
+    For each audited transcript, embed the raw transcript text and retrieve
+    the top-3 semantically most similar ground-truth cases from ChromaDB.
+    Then compare their hallucination-type sets to show cross-case patterns.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+
+    audit_log = _Path("audit_cases/results/audit_log.jsonl")
+    if not audit_log.exists():
+        print("[ERROR] No audit log found. Run audits first.")
+        return
+
+    # Deduplicate: keep the latest result per transcript_id
+    latest: dict = {}
+    with open(audit_log, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                r = _json.loads(line)
+                latest[r["transcript_id"]] = r
+
+    from src.core.config import get_settings
+    from src.rag.indexer import GroundTruthIndexer
+    from src.rag.retriever import GroundTruthRetriever
+
+    settings = get_settings()
+    indexer = GroundTruthIndexer(persist_dir=settings.chroma_persist_dir)
+    if indexer.count() == 0:
+        print("[ERROR] ChromaDB index is empty. Run: python run_audit.py --index")
+        return
+    retriever = GroundTruthRetriever(indexer)
+
+    transcripts_dir = _Path("audit_cases/raw_transcripts")
+
+    print("\n" + "=" * 70)
+    print("  MeetingTruth — RAG Cross-Case Hallucination Pattern Analysis")
+    print("=" * 70)
+    print(f"  {'Case':<32} {'Risk':<8} {'Types'}")
+    print(f"  {'  └─ Similar case':<32} {'Risk':<8} {'Shared types'}")
+    print("  " + "-" * 66)
+
+    # Save data for visualizer
+    analysis_rows = []
+
+    for tid in sorted(latest):
+        result = latest[tid]
+        txt_path = transcripts_dir / f"{tid}.txt"
+        if not txt_path.exists():
+            continue
+
+        transcript = txt_path.read_text(encoding="utf-8")
+        # RAG: embed transcript text, retrieve top-4 (self is usually #1)
+        hits = retriever.search_similar(transcript, n_results=4)
+        neighbors = [h for h in hits if h.get("transcript_id") != tid][:3]
+
+        query_types = {f["hallucination_type"] for f in result["hallucination_flags"]}
+        print(f"\n  {tid:<32} {result['overall_risk']:<8} {sorted(query_types)}")
+
+        for nb in neighbors:
+            nb_tid = nb.get("transcript_id", "?")
+            nb_result = latest.get(nb_tid)
+            if nb_result:
+                nb_types = {f["hallucination_type"] for f in nb_result["hallucination_flags"]}
+                shared = sorted(query_types & nb_types)
+                print(f"    └─ {nb_tid:<30} {nb_result['overall_risk']:<8} {shared or ['—']}")
+                analysis_rows.append({
+                    "query": tid,
+                    "neighbor": nb_tid,
+                    "shared_count": len(query_types & nb_types),
+                    "jaccard": (
+                        len(query_types & nb_types) / len(query_types | nb_types)
+                        if query_types | nb_types else 0.0
+                    ),
+                })
+
+    print("\n" + "=" * 70)
+
+    # Persist for visualizer
+    out = _Path("audit_cases/results/rag_analysis.json")
+    with open(out, "w", encoding="utf-8") as fh:
+        _json.dump({"cases": latest, "edges": analysis_rows}, fh, indent=2, ensure_ascii=False)
+    print(f"  Saved to {out}")
+
+
 def _print_report() -> None:
     from src.mcp.tools.get_audit_summary import get_audit_summary
     summary = get_audit_summary()
@@ -119,14 +207,24 @@ def main() -> None:
     parser.add_argument(
         "--generate",
         action="store_true",
-        help="(Re-)generate all 50 synthetic test cases and exit.",
+        help="(Re-)generate all 10 synthetic test cases and exit.",
     )
     parser.add_argument(
         "--index",
         action="store_true",
         help="(Re-)index ground-truth files into ChromaDB and exit.",
     )
+    parser.add_argument(
+        "--analyze",
+        action="store_true",
+        help="RAG cross-case analysis: find similar cases and compare hallucination patterns.",
+    )
     args = parser.parse_args()
+
+    # ── analyze ───────────────────────────────────────────────────────────────
+    if args.analyze:
+        _run_rag_analysis()
+        return
 
     # ── generate ──────────────────────────────────────────────────────────────
     if args.generate:
@@ -181,6 +279,9 @@ def main() -> None:
     agent = AuditAgent()
     csv_rows: list[dict] = []
     failed = 0
+    # Each case makes 2 Gemini calls; gemini-2.0-flash-lite free tier = 30 RPM
+    # 10s gap → ~6 cases/min → well within limit
+    _DELAY_SECONDS = 10
 
     for i, (tid, transcript, defect_type) in enumerate(cases, 1):
         prefix = f"[{i:3d}/{len(cases)}] {tid}"
@@ -204,6 +305,10 @@ def main() -> None:
         except Exception as exc:  # noqa: BLE001
             print(f"FAILED — {exc}")
             failed += 1
+
+        # Rate-limit guard: skip delay after the last case
+        if i < len(cases):
+            time.sleep(_DELAY_SECONDS)
 
     if csv_rows:
         _write_csv(csv_rows)
